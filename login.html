@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login · SignUp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #21263a;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0f2ff;
+      --muted: #8891b0;
+      --accent: #e84479;
+      --accent2: #ff6b9d;
+      --input-bg: #13161f;
+      --radius: 14px;
+      --font: 'DM Sans', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(232,68,121,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 10% 80%, rgba(99,102,241,0.14) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 420px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.5);
+    }
+
+    .tabs {
+      display: flex;
+      background: var(--input-bg);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.22s;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(232,68,121,0.35);
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 1.5rem;
+    }
+    .social-btn {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+    .social-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .social-btn svg { width: 18px; height: 18px; }
+
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--muted); font-size: 12px; margin-bottom: 1.5rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    .field { margin-bottom: 1rem; }
+    .field label {
+      display: block; font-size: 12px; font-weight: 500;
+      color: var(--muted); margin-bottom: 6px; letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .input-wrap {
+      display: flex; align-items: center;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0 12px;
+      transition: border-color 0.2s;
+    }
+    .input-wrap:focus-within { border-color: var(--accent); }
+    .input-wrap svg { color: var(--muted); flex-shrink: 0; width: 16px; height: 16px; }
+    .input-wrap input {
+      width: 100%; background: transparent; border: none; outline: none;
+      color: var(--text); font-family: var(--font); font-size: 14px;
+      padding: 12px 10px;
+    }
+    .input-wrap input::placeholder { color: var(--muted); }
+
+    .eye-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); display: flex; padding: 0;
+      transition: color 0.2s;
+    }
+    .eye-btn:hover { color: var(--text); }
+    .eye-btn svg { width: 16px; height: 16px; }
+
+    .check-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--muted); margin-bottom: 1.25rem;
+    }
+    .check-row input[type=checkbox] {
+      width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer;
+    }
+    .check-row a { color: var(--accent); text-decoration: none; }
+    .check-row a:hover { text-decoration: underline; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s, transform 0.15s;
+      margin-bottom: 1rem;
+    }
+    .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .submit-btn:active { transform: translateY(0); }
+
+    .google-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .google-btn:hover { border-color: rgba(255,255,255,0.2); background: #252a3d; }
+
+    .forgot {
+      display: block; text-align: right; font-size: 12px;
+      color: var(--accent); text-decoration: none; margin-top: -6px; margin-bottom: 1.25rem;
+    }
+    .forgot:hover { text-decoration: underline; }
+
+    .error-msg {
+      background: rgba(232,68,121,0.12);
+      border: 1px solid rgba(232,68,121,0.3);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #ff7aa8;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    .success-msg {
+      background: rgba(22,196,127,0.12);
+      border: 1px solid rgba(22,196,127,0.3);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #4de8a8;
+      margin-bottom: 1rem;
+      text-align: center;
+      display: none;
+    }
+    .success-msg.show { display: block; }
+
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #fff 40%, var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .sub {
+      font-size: 13px; color: var(--muted); margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <p class="brand">Welcome back.</p>
+  <p class="sub" id="sub-text">Sign in to continue</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-login" onclick="showTab('login')">Log In</button>
+    <button class="tab-btn" id="tab-register" onclick="showTab('register')">Register</button>
+  </div>
+
+  <!-- LOGIN PANEL -->
+  <div class="form-panel active" id="panel-login">
+    <div class="socials">
+      <a class="social-btn" href="#" title="Facebook" onclick="return socialLogin('Facebook')">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="color:#4267B2"><path d="M22 12a10 10 0 1 0-11.563 9.874v-6.987H8.07V12h2.367V9.797c0-2.34 1.392-3.631 3.524-3.631 1.02 0 2.087.182 2.087.182v2.296h-1.176c-1.159 0-1.52.72-1.52 1.458V12h2.584l-.413 2.887h-2.171v6.987A10.004 10.004 0 0 0 22 12z"/></svg>
+      </a>
+      <a class="social-btn" href="#" title="Instagram" onclick="return socialLogin('Instagram')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:#C13584"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="social-btn" href="#" title="Twitter / X" onclick="return socialLogin('Twitter')">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="color:#ccc"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.741l7.73-8.835L1.254 2.25H8.08l4.256 5.626 5.908-5.626Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+
+    <div class="divider">or continue with</div>
+
+    <div class="error-msg" id="login-error"></div>
+
+    <div class="field">
+      <label>Username or Phone</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <input type="text" id="login-user" placeholder="Enter username or phone" autocomplete="username"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password"/>
+        <button class="eye-btn" onclick="togglePass('login-pass', this)" title="Show/hide password">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="check-row">
+      <input type="checkbox" id="remember"/>
+      <label for="remember">Remember me</label>
+      <a href="#" class="forgot" style="margin-left:auto;margin-bottom:0" onclick="return false">Forgot password?</a>
+    </div>
+
+    <button class="submit-btn" onclick="doLogin()">Log In</button>
+
+    <div class="divider">or</div>
+
+    <button class="google-btn" onclick="socialLogin('Google')">
+      <svg viewBox="0 0 48 48" width="18" height="18"><path fill="#EA4335" d="M24 9.5c3.14 0 5.95 1.08 8.17 2.86l6.09-6.09C34.46 3.14 29.55 1 24 1 14.82 1 7.07 6.63 3.9 14.5l7.08 5.51C12.67 13.35 17.91 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.64-.14-3.22-.4-4.75H24v9.02h12.65C35.9 32.4 33.2 35 29.7 36.7l7 5.44C41.3 38.4 46.5 32 46.5 24.5z"/><path fill="#FBBC05" d="M10.98 28.01A14.8 14.8 0 0 1 9.5 24c0-1.39.22-2.73.6-4.01L3.02 14.5A23.5 23.5 0 0 0 .5 24c0 3.74.87 7.28 2.52 10.42l7.96-6.41z"/><path fill="#34A853" d="M24 46.5c5.55 0 10.2-1.83 13.6-4.97l-7-5.44c-1.87 1.24-4.27 1.97-6.6 1.97-6.1 0-11.26-3.84-13.13-9.22l-7.96 6.42C7.07 43.3 14.82 46.5 24 46.5z"/></svg>
+      Sign in with Google
+    </button>
+  </div>
+
+  <!-- REGISTER PANEL -->
+  <div class="form-panel" id="panel-register">
+    <div class="error-msg" id="reg-error"></div>
+    <div class="success-msg" id="reg-success">Account created! You can now log in.</div>
+
+    <div class="field">
+      <label>Full Name</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <input type="text" id="reg-name" placeholder="Your full name"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Email Address</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        <input type="email" id="reg-email" placeholder="you@example.com"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Create Password</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="password" id="reg-pass" placeholder="Min. 6 characters" minlength="6" autocomplete="new-password"/>
+        <button class="eye-btn" onclick="togglePass('reg-pass', this)" title="Show/hide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Confirm Password</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="password" id="reg-pass2" placeholder="Re-enter password" autocomplete="new-password"/>
+        <button class="eye-btn" onclick="togglePass('reg-pass2', this)" title="Show/hide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="check-row" style="margin-bottom:1.25rem">
+      <input type="checkbox" id="tos"/>
+      <label for="tos">I agree to the <a href="#">Terms &amp; Conditions</a></label>
+    </div>
+
+    <button class="submit-btn" onclick="doRegister()">Create Account</button>
+  </div>
+</div>
+
+<script>
+  function showTab(tab) {
+    document.getElementById('panel-login').classList.toggle('active', tab === 'login');
+    document.getElementById('panel-register').classList.toggle('active', tab === 'register');
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+    document.getElementById('sub-text').textContent =
+      tab === 'login' ? 'Sign in to continue' : 'Create your account';
+    hideErrors();
+  }
+
+  function togglePass(id, btn) {
+    const inp = document.getElementById(id);
+    const isText = inp.type === 'text';
+    inp.type = isText ? 'password' : 'text';
+    btn.querySelector('svg').innerHTML = isText
+      ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>'
+      : '<path d="M17.94 17.94A10 10 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9 9 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  }
+
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg; el.classList.add('show');
+  }
+
+  function hideErrors() {
+    ['login-error','reg-error','reg-success'].forEach(id => {
+      document.getElementById(id).classList.remove('show');
+    });
+  }
+
+  function doLogin() {
+    hideErrors();
+    const user = document.getElementById('login-user').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    if (!user) return showError('login-error', 'Please enter your username or phone number.');
+    if (!pass) return showError('login-error', 'Please enter your password.');
+    // Replace with your real auth logic
+    alert('Logged in as: ' + user);
+  }
+
+  function doRegister() {
+    hideErrors();
+    const name  = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const pass  = document.getElementById('reg-pass').value;
+    const pass2 = document.getElementById('reg-pass2').value;
+    const tos   = document.getElementById('tos').checked;
+
+    if (!name)  return showError('reg-error', 'Full name is required.');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return showError('reg-error', 'Please enter a valid email address.');
+    if (pass.length < 6) return showError('reg-error', 'Password must be at least 6 characters.');
+    if (pass !== pass2) return showError('reg-error', 'Passwords do not match.');
+    if (!tos) return showError('reg-error', 'You must agree to the Terms & Conditions.');
+
+    document.getElementById('reg-success').classList.add('show');
+    setTimeout(() => showTab('login'), 2000);
+  }
+
+  function socialLogin(provider) {
+    alert('Redirect to ' + provider + ' login…');
+    return false;
+  }
+</script>
+</body>
+</html>
